@@ -22,49 +22,60 @@
   .tools .print { background: #f0f0f4; }
   .tools p { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
 
-  /* ---------- Poster (A5) ---------- */
+  /* ---------- Poster (A4) ---------- */
   .poster {
-    width: 148mm; min-height: 210mm; margin: 0 auto 30px; background: #fff;
+    width: 210mm; min-height: 297mm; margin: 0 auto 30px; background: #fff;
     border-radius: 6mm; overflow: hidden; display: flex; flex-direction: column;
     box-shadow: 0 10px 40px -15px rgba(0,0,0,.3);
   }
   .top {
     background: linear-gradient(150deg, #ff2a2a, var(--red) 45%, var(--red-dark));
-    color: #fff; text-align: center; padding: 7mm 6mm 6mm;
+    color: #fff; text-align: center; padding: 5mm 6mm 4mm;
   }
-  .top h1 { margin: 0; font-size: 26pt; font-weight: 800; line-height: 1.2; }
-  .top p { margin: 1mm 0 0; font-size: 14pt; font-weight: 700; opacity: .95; }
+  .top h1 { margin: 0; font-size: 34pt; font-weight: 800; line-height: 1.2; }
+  .top p { margin: 1mm 0 0; font-size: 18pt; font-weight: 700; opacity: .95; }
 
-  .main { text-align: center; padding: 5mm 6mm 3mm; }
+  .main { text-align: center; padding: 4mm 6mm 2mm; }
   .main-qr { display: inline-block; padding: 3mm; border: 1mm solid var(--ink); border-radius: 4mm; }
-  .main-qr img, .main-qr canvas { width: 62mm !important; height: 62mm !important; display: block; }
-  .main .cap { margin-top: 2.5mm; font-size: 13pt; font-weight: 800; }
+  .main-qr img, .main-qr canvas { width: 50mm !important; height: 50mm !important; display: block; }
+  .main .cap { margin-top: 2.5mm; font-size: 16pt; font-weight: 800; }
   .main .cap span { color: var(--red); }
 
-  .offline { margin: 2mm 6mm 0; border: 0.5mm dashed #c9c9d3; border-radius: 4mm; padding: 4mm 4mm 2mm; }
+  .offline { margin: 2mm 10mm 0; border: 0.5mm dashed #c9c9d3; border-radius: 4mm; padding: 4mm 4mm 2mm; }
   .offline-head { text-align: center; margin-bottom: 3mm; }
   .offline-head b { display: inline-block; background: var(--ink); color: #fff; font-size: 12pt; padding: 1mm 5mm; border-radius: 99px; }
-  .offline-head p { margin: 1.5mm 0 0; font-size: 10.5pt; color: var(--muted); font-weight: 700; }
+  .offline-head p { margin: 1.5mm 0 0; font-size: 12.5pt; color: var(--muted); font-weight: 700; }
   .offline-head p span { color: var(--red); }
 
-  .nums { display: grid; grid-template-columns: 1fr; gap: 2.5mm; }
+  .nums { display: grid; grid-template-columns: 1fr; gap: 2mm; }
   .nums.two { grid-template-columns: 1fr 1fr; }
-  .num { display: flex; align-items: center; gap: 3mm; padding: 2mm; border-radius: 3mm; background: #f6f6f9; }
+  .num { display: flex; align-items: center; gap: 3mm; padding: 1.5mm 2mm; border-radius: 3mm; background: #f6f6f9; }
   .num .q img, .num .q canvas { width: 22mm !important; height: 22mm !important; display: block; background: #fff; padding: 1mm; border-radius: 1.5mm; }
   .num .name { font-size: 12pt; font-weight: 800; line-height: 1.2; }
   .num .phone { font-size: 14pt; font-weight: 800; direction: ltr; text-align: right; letter-spacing: .3mm; color: var(--red-dark); }
-  .nums.two .phone { font-size: 11.5pt; }
-  .nums.two .q img, .nums.two .q canvas { width: 18mm !important; height: 18mm !important; }
+  .nums.two .phone { font-size: 14pt; }
+  .nums.two .q img, .nums.two .q canvas { width: 17mm !important; height: 17mm !important; }
 
-  .credit { margin-top: auto; padding: 3mm 6mm 4mm; text-align: center; font-size: 9pt; color: var(--muted); font-weight: 600; }
+  .insta {
+    display: flex; align-items: center; justify-content: center; gap: 4mm;
+    margin: 4mm 10mm 0; padding: 3mm; border-radius: 4mm; background: #f3eefb;
+  }
+  .insta .badge {
+    padding: 1.5mm 4mm; border-radius: 2.5mm; color: #fff; font-weight: 800; font-size: 13pt; direction: ltr;
+    background: linear-gradient(135deg, #6d3fc0, #4b2a85);
+  }
+  .insta .name { font-size: 15pt; font-weight: 800; }
+  .insta .phone { font-size: 17pt; font-weight: 800; direction: ltr; color: #4b2a85; letter-spacing: .3mm; }
+
+  .credit { margin-top: auto; padding: 4mm 6mm 5mm; text-align: center; font-size: 11pt; color: var(--muted); font-weight: 600; }
   .credit b { color: var(--ink); }
   .credit span { color: var(--green); font-weight: 800; direction: ltr; display: inline-block; }
 
-  @page { size: A5; margin: 0; }
+  @page { size: A4; margin: 0; }
   @media print {
     body { background: #fff; }
     .tools { display: none; }
-    .poster { margin: 0; border-radius: 0; box-shadow: none; height: 210mm; }
+    .poster { margin: 0; border-radius: 0; box-shadow: none; height: 297mm; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -78,7 +89,7 @@
     <button class="gen" onclick="build()">حدّث الستيكر</button>
     <button class="print" onclick="window.print()">طباعة / حفظ PDF</button>
   </div>
-  <p>اسم المحل والأرقام بتتاخد من ملف config.js. في الطباعة اختار مقاس A5، أو «Save as PDF» عشان تبعته للمطبعة.</p>
+  <p>اسم المحل والأرقام بتتاخد من ملف config.js. في الطباعة اختار مقاس A4، أو «Save as PDF» عشان تبعته للمطبعة.</p>
 </div>
 
 <div class="poster">
@@ -98,6 +109,12 @@
       <p>صوّر المربع اللي جنب الرقم ← هيفتح الاتصال ← اكتب <span>المبلغ وبعده #</span> ودوس اتصال</p>
     </div>
     <div class="nums" id="nums"></div>
+  </div>
+
+  <div class="insta" id="insta">
+    <span class="badge">InstaPay</span>
+    <span class="name" id="instaName"></span>
+    <span class="phone" id="instaPhone"></span>
   </div>
 
   <div class="credit">تصميم وتنفيذ <b id="devName"></b> · واتساب <span id="devPhone"></span></div>
@@ -124,6 +141,13 @@
     const main = document.getElementById("mainQr");
     if (url) qr(main, url, 600);
     else main.innerHTML = '<div style="width:62mm;height:62mm;display:grid;place-items:center;color:#999">اكتب اللينك فوق</div>';
+
+    const insta = document.getElementById("insta");
+    insta.style.display = SHOP.instapay ? "" : "none";
+    if (SHOP.instapay) {
+      document.getElementById("instaName").textContent = SHOP.instapay.name;
+      document.getElementById("instaPhone").textContent = SHOP.instapay.number.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
+    }
 
     const nums = document.getElementById("nums");
     nums.innerHTML = "";

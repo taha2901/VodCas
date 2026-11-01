@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#e60000">
+<meta name="theme-color" content="#f5f5f8">
 <title>ادفع بفودافون كاش</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,82 +11,94 @@
 <style>
   :root {
     --red: #e60000; --red-dark: #b00000; --ink: #17171c; --muted: #7a7a85;
-    --line: #ededf2; --bg: #f5f5f8; --green: #1faa59;
+    --line: #ededf2; --bg: #f5f5f8; --green: #1faa59; --purple: #4b2a85;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
   }
   .app {
-    max-width: 440px; min-height: 100%; margin: 0 auto;
-    display: flex; flex-direction: column; padding: 0 16px;
+    max-width: 440px; margin: 0 auto;
+    padding: 0 14px calc(76px + env(safe-area-inset-bottom));
   }
+  button { font-family: inherit; }
+  svg { width: 18px; height: 18px; }
 
   /* ---------- Header ---------- */
-  header { display: flex; align-items: center; gap: 12px; padding: 18px 2px 4px; }
+  header { display: flex; align-items: center; gap: 12px; padding: 16px 2px 12px; }
   .logo {
-    width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px;
-    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 22px;
+    width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px;
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 21px;
     background: linear-gradient(135deg, #ff3b3b, var(--red-dark));
   }
-  header h1 { margin: 0; font-size: 19px; font-weight: 800; line-height: 1.3; }
-  header p { margin: 0; font-size: 13px; color: var(--muted); font-weight: 600; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.3; }
+  header p { margin: 0; font-size: 12.5px; color: var(--muted); font-weight: 600; }
 
   /* ---------- Amount ---------- */
   .amount {
-    display: flex; align-items: center; gap: 10px; background: #fff; margin-top: 14px;
-    border: 2px solid var(--line); border-radius: 18px; padding: 4px 16px; transition: border-color .2s;
+    display: flex; align-items: center; gap: 10px; background: #fff;
+    border: 2px solid var(--line); border-radius: 16px; padding: 2px 16px; transition: border-color .2s;
   }
   .amount:focus-within { border-color: var(--red); }
   .amount label { font-weight: 700; font-size: 15px; white-space: nowrap; }
   .amount input {
-    flex: 1; min-width: 0; border: 0; outline: 0; background: none; padding: 8px 0;
-    font: 800 24px "Cairo", sans-serif; color: var(--ink); text-align: center; direction: ltr;
+    flex: 1; min-width: 0; border: 0; outline: 0; background: none; padding: 6px 0;
+    font: 800 22px "Cairo", sans-serif; color: var(--ink); text-align: center; direction: ltr;
   }
   .amount input::placeholder { color: #c9c9d1; }
   .amount span { color: var(--muted); font-weight: 700; font-size: 14px; }
 
-  /* ---------- Numbers ---------- */
-  .label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 18px 4px 8px; }
-  .list { background: #fff; border-radius: 18px; overflow: hidden; }
-  .row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
-  .row + .row { border-top: 1px solid var(--line); }
-  .avatar {
-    width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px;
-    display: grid; place-items: center; font-weight: 800; font-size: 17px;
-    background: #fff0f0; color: var(--red);
-  }
-  .info { flex: 1; min-width: 0; }
-  .name { font-weight: 700; font-size: 15px; line-height: 1.3; }
-  .phone { direction: ltr; text-align: right; font-size: 16px; font-weight: 800; letter-spacing: 1px; }
-  .icon-btn {
-    width: 42px; height: 42px; flex-shrink: 0; border: 0; border-radius: 12px; cursor: pointer;
-    display: grid; place-items: center; background: #f2f2f6; color: var(--ink); transition: all .15s;
-  }
-  .icon-btn.done { background: #e8f8ef; color: var(--green); }
-  .pay {
-    height: 42px; padding: 0 16px; flex-shrink: 0; border: 0; border-radius: 12px; cursor: pointer;
-    background: var(--red); color: #fff; font: 700 15px "Cairo", sans-serif;
-  }
-  .icon-btn:active, .pay:active, .wa:active { transform: scale(.95); }
-  svg { width: 20px; height: 20px; }
+  .label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 14px 4px 8px; }
+  .label b { color: var(--red); }
 
-  .hint { font-size: 13px; color: var(--muted); margin: 10px 4px 0; line-height: 1.7; }
-  .hint b { color: var(--red); }
+  /* ---------- Numbers grid ---------- */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile {
+    position: relative; display: block; width: 100%; text-align: right; cursor: pointer;
+    background: #fff; border: 1.5px solid transparent; border-radius: 14px; padding: 9px 12px 9px 40px;
+    transition: transform .1s, border-color .15s;
+  }
+  .tile:active { transform: scale(.97); border-color: var(--red); }
+  .tile .name { display: block; font-size: 12px; color: var(--muted); font-weight: 700; line-height: 1.4; }
+  .tile .phone {
+    display: block; direction: ltr; text-align: right; color: var(--ink);
+    font-size: 15.5px; font-weight: 800; letter-spacing: .3px; line-height: 1.4;
+  }
+  .tile .go {
+    position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; border-radius: 9px; display: grid; place-items: center;
+    background: var(--red); color: #fff;
+  }
+  .tile .go svg { width: 15px; height: 15px; }
+
+  /* ---------- InstaPay ---------- */
+  .insta {
+    display: flex; align-items: center; gap: 12px; margin-top: 12px;
+    background: #fff; border-radius: 14px; padding: 10px 12px;
+  }
+  .insta .badge {
+    flex-shrink: 0; padding: 5px 10px; border-radius: 9px; font-size: 12px; font-weight: 800;
+    color: #fff; background: linear-gradient(135deg, #6d3fc0, var(--purple)); direction: ltr;
+  }
+  .insta .info { flex: 1; min-width: 0; }
+  .insta .name { font-size: 12px; color: var(--muted); font-weight: 700; line-height: 1.4; }
+  .insta .phone { direction: ltr; text-align: right; font-size: 15.5px; font-weight: 800; line-height: 1.4; }
+  .copy {
+    flex-shrink: 0; height: 36px; padding: 0 12px; border: 0; border-radius: 10px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f1ecfa; color: var(--purple); font-size: 13px; font-weight: 700;
+  }
+  .copy.done { background: #e8f8ef; color: var(--green); }
 
   /* ---------- WhatsApp ---------- */
   .wa {
-    display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px;
-    padding: 13px; border-radius: 16px; text-decoration: none;
-    background: #e8f8ef; color: var(--green); font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px;
+    padding: 12px; border-radius: 14px; text-decoration: none;
+    background: #e8f8ef; color: var(--green); font-weight: 700; font-size: 14.5px;
   }
-  .insta { background: #f0ebfa; color: #4b2a85; margin-top: 8px; }
 
   /* ---------- Developer credit (fixed bottom) ---------- */
-  .shop { flex: 1; min-width: 0; }
-  .app { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   .dev-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
     display: flex; justify-content: center;
@@ -95,24 +107,24 @@
   }
   .dev {
     display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
-    padding: 7px 7px 7px 16px; border-radius: 999px; background: #fff;
+    padding: 6px 6px 6px 16px; border-radius: 999px; background: #fff;
     border: 1px solid var(--line); box-shadow: 0 6px 20px -10px rgba(20,20,40,.3);
     transition: transform .15s;
   }
   .dev:active { transform: scale(.96); }
   .dev-icon {
-    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
     background: var(--green); color: #fff; flex-shrink: 0;
   }
-  .dev-icon svg { width: 18px; height: 18px; }
-  .dev-text { font-size: 12.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .dev-icon svg { width: 17px; height: 17px; }
+  .dev-text { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .dev-text b { color: var(--ink); font-weight: 800; }
   .dev-text i { display: inline-block; width: 1px; height: 12px; background: #dcdce3; margin: 0 8px; vertical-align: middle; }
   .dev-text em { font-style: normal; color: var(--green); font-weight: 800; }
 
   .toast {
     position: fixed; bottom: calc(80px + env(safe-area-inset-bottom)); left: 50%;
-    transform: translate(-50%, 10px); opacity: 0; pointer-events: none;
+    transform: translate(-50%, 10px); opacity: 0; pointer-events: none; z-index: 10;
     background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 999px;
     font-weight: 600; font-size: 14px; transition: all .2s; white-space: nowrap;
   }
@@ -124,7 +136,7 @@
 
   <header>
     <div class="logo" id="logo"></div>
-    <div class="shop">
+    <div>
       <h1 id="shopName"></h1>
       <p>ادفع بفودافون كاش</p>
     </div>
@@ -136,9 +148,8 @@
     <span>جنيه</span>
   </div>
 
-  <div class="label">اختار الرقم</div>
-  <div class="list" id="numbers"></div>
-  <div class="hint">دوس <b>حوّل</b> ← هيفتح الاتصال والكود جاهز ← دوس اتصال واكتب الرقم السري</div>
+  <div class="label" id="pickLabel">دوس على أي رقم <b>وهيفتح التحويل علطول</b></div>
+  <div class="grid" id="numbers"></div>
 
   <div id="extras"></div>
 </div>
@@ -157,61 +168,60 @@
   const ICONS = {
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
   };
 
+  // الآيفون بيمنع أكواد * و # من اللينكات، فبننسخ الرقم بداله
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   const amountInput = document.getElementById("amount");
   const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
 
   // ---- Header ----
   $("shopName").textContent = SHOP.name;
   $("logo").textContent = SHOP.name.trim().charAt(0);
   document.title = SHOP.name + " | فودافون كاش";
+  if (isIOS) $("pickLabel").innerHTML = "دوس على أي رقم <b>وهيتنسخ</b>، وحوّل من تطبيق Ana Vodafone";
 
   // ---- Numbers ----
-  const list = $("numbers");
+  const grid = $("numbers");
   SHOP.numbers.forEach(({ number, name }) => {
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
-      <div class="avatar"></div>
-      <div class="info">
-        <div class="name"></div>
-        <div class="phone"></div>
-      </div>
-      <button class="icon-btn copy" aria-label="نسخ الرقم">${ICONS.copy}</button>
-      <button class="pay">حوّل</button>`;
-    row.querySelector(".avatar").textContent = name.trim().charAt(0);
-    row.querySelector(".name").textContent = name;
-    row.querySelector(".phone").textContent = number.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
-    const copyBtn = row.querySelector(".copy");
-    copyBtn.onclick = () => copy(number, copyBtn);
-    row.querySelector(".pay").onclick = () => transfer(number);
-    list.appendChild(row);
+    const tile = document.createElement("button");
+    tile.className = "tile";
+    tile.innerHTML = `<span class="name"></span><span class="phone"></span><span class="go">${ICONS.send}</span>`;
+    tile.querySelector(".name").textContent = name;
+    tile.querySelector(".phone").textContent = fmt(number);
+    tile.onclick = () => transfer(number);
+    grid.appendChild(tile);
   });
 
-  // ---- WhatsApp / InstaPay ----
+  // ---- InstaPay / WhatsApp ----
   const extras = $("extras");
+  if (SHOP.instapay) {
+    const box = document.createElement("div");
+    box.className = "insta";
+    box.innerHTML = `
+      <span class="badge">InstaPay</span>
+      <div class="info"><div class="name"></div><div class="phone"></div></div>
+      <button class="copy">${ICONS.copy}<span>نسخ</span></button>`;
+    box.querySelector(".name").textContent = SHOP.instapay.name;
+    box.querySelector(".phone").textContent = fmt(SHOP.instapay.number);
+    const btn = box.querySelector(".copy");
+    btn.onclick = () => copy(SHOP.instapay.number, btn);
+    extras.appendChild(box);
+  }
   if (SHOP.whatsapp) {
     const wa = document.createElement("a");
     wa.className = "wa";
     wa.target = "_blank";
     wa.rel = "noopener";
-    wa.innerHTML = `${ICONS.check}<span>حوّلت؟ ابعت صورة التحويل</span>`;
     wa.href = `https://wa.me/${SHOP.whatsapp}?text=` + encodeURIComponent("تم التحويل فودافون كاش");
+    wa.innerHTML = `${ICONS.check}<span>حوّلت؟ ابعت صورة التحويل</span>`;
     wa.onclick = () => {
       const amount = amountInput.value ? ` بمبلغ ${amountInput.value} جنيه` : "";
       wa.href = `https://wa.me/${SHOP.whatsapp}?text=` + encodeURIComponent(`تم التحويل فودافون كاش${amount}`);
     };
     extras.appendChild(wa);
-  }
-  if (SHOP.instapay) {
-    const ip = document.createElement("a");
-    ip.className = "wa insta";
-    ip.target = "_blank";
-    ip.rel = "noopener";
-    ip.href = SHOP.instapay;
-    ip.textContent = "ادفع بإنستاباي";
-    extras.appendChild(ip);
   }
 
   // ---- Credit ----
@@ -222,9 +232,6 @@
   // ---- Actions ----
   // يفتح الاتصال بكود تحويل فودافون كاش: *9*7*الرقم*المبلغ#  (# بتتكتب %23)
   // لو المبلغ فاضي، الكود بيتكتب لحد الرقم والزبون يكمّل المبلغ و # بنفسه
-  // الآيفون بيمنع أكواد * و # من اللينكات، فبننسخ الرقم بداله
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
   function transfer(number) {
     if (isIOS) {
       copy(number, null, "اتنسخ الرقم، حوّل من تطبيق Ana Vodafone");
@@ -244,8 +251,8 @@
       toast(msg);
       if (!btn) return;
       btn.classList.add("done");
-      btn.innerHTML = ICONS.check;
-      setTimeout(() => { btn.classList.remove("done"); btn.innerHTML = ICONS.copy; }, 2000);
+      btn.innerHTML = `${ICONS.check}<span>اتنسخ</span>`;
+      setTimeout(() => { btn.classList.remove("done"); btn.innerHTML = `${ICONS.copy}<span>نسخ</span>`; }, 2000);
     };
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
@@ -271,7 +278,7 @@
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove("show"), 2000);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
   }
 </script>
 </body>
