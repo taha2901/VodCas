@@ -7,7 +7,7 @@ const SHOP = {
   whatsapp: "",
   // إنستاباي (اختياري). سيبه null لو مش عاوزه
   // link: رابط الدفع من تطبيق إنستاباي (بيبدأ بـ https://ipn.eg/...). لو فاضي بيظهر زرار نسخ الرقم بس
-  instapay: { name: "هيثم علي", number: "01026141011", link: "https://ipn.eg/S/taha2901/instapay/2pm4fr" },
+  instapay: { name: "هيثم علي", number: "01026141011", link: "https://ipn.eg/S/haythemali/instapay/4VZAE3" },
   numbers: [
     { number: "01064247696", name: "أحمد" },
     { number: "01066993507", name: "أحمد" },
