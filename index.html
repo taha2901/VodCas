@@ -34,6 +34,20 @@
   header h1 { margin: 0; font-size: 19px; font-weight: 800; line-height: 1.3; }
   header p { margin: 0; font-size: 13px; color: var(--muted); font-weight: 600; }
 
+  /* ---------- Amount ---------- */
+  .amount {
+    display: flex; align-items: center; gap: 10px; background: #fff; margin-top: 14px;
+    border: 2px solid var(--line); border-radius: 18px; padding: 4px 16px; transition: border-color .2s;
+  }
+  .amount:focus-within { border-color: var(--red); }
+  .amount label { font-weight: 700; font-size: 15px; white-space: nowrap; }
+  .amount input {
+    flex: 1; min-width: 0; border: 0; outline: 0; background: none; padding: 8px 0;
+    font: 800 24px "Cairo", sans-serif; color: var(--ink); text-align: center; direction: ltr;
+  }
+  .amount input::placeholder { color: #c9c9d1; }
+  .amount span { color: var(--muted); font-weight: 700; font-size: 14px; }
+
   /* ---------- Numbers ---------- */
   .label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 18px 4px 8px; }
   .list { background: #fff; border-radius: 18px; overflow: hidden; }
@@ -116,9 +130,15 @@
     </div>
   </header>
 
+  <div class="amount">
+    <label for="amount">المبلغ</label>
+    <input id="amount" type="number" inputmode="numeric" min="1" placeholder="0">
+    <span>جنيه</span>
+  </div>
+
   <div class="label">اختار الرقم</div>
   <div class="list" id="numbers"></div>
-  <div class="hint">لما تدوس <b>حوّل</b> الرقم بيتنسخ لوحده وتطبيق Ana Vodafone بيفتح، ادخل على فودافون كاش ← تحويل والصق الرقم</div>
+  <div class="hint">دوس <b>حوّل</b> ← هيفتح الاتصال والكود جاهز ← دوس اتصال واكتب الرقم السري</div>
 
   <div id="extras"></div>
 </div>
@@ -132,40 +152,14 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
 <script>
-  // ============ عدّل البيانات هنا بس ============
-  const SHOP = {
-    name: "اسم المحل",
-    // رقم واتساب لاستقبال صورة التحويل (بصيغة دولية من غير +). سيبه فاضي "" لو مش عاوزه
-    whatsapp: "201000000000",
-    // لينك إنستاباي (اختياري) سيبه فاضي "" لو مش عاوزه
-    instapay: "",
-    numbers: [
-      { number: "01000000001", name: "محمد" },
-      { number: "01000000002", name: "أحمد" },
-      { number: "01000000003", name: "المحل" },
-    ],
-  };
-
-  // بيانات صاحب الشغل (بتظهر تحت في الصفحة)
-  const DEV = {
-    name: "م. طه حماده",
-    phone: "01061257703",
-  };
-  // ============================================
-
   const ICONS = {
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
   };
 
-  // تطبيق Ana Vodafone (فيه فودافون كاش)
-  const APP = {
-    android: "com.emeint.android.myservices",
-    ios: "https://apps.apple.com/eg/app/id437564823",
-  };
-
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const amountInput = document.getElementById("amount");
   const $ = (id) => document.getElementById(id);
 
   // ---- Header ----
@@ -204,6 +198,10 @@
     wa.rel = "noopener";
     wa.innerHTML = `${ICONS.check}<span>حوّلت؟ ابعت صورة التحويل</span>`;
     wa.href = `https://wa.me/${SHOP.whatsapp}?text=` + encodeURIComponent("تم التحويل فودافون كاش");
+    wa.onclick = () => {
+      const amount = amountInput.value ? ` بمبلغ ${amountInput.value} جنيه` : "";
+      wa.href = `https://wa.me/${SHOP.whatsapp}?text=` + encodeURIComponent(`تم التحويل فودافون كاش${amount}`);
+    };
     extras.appendChild(wa);
   }
   if (SHOP.instapay) {
@@ -222,35 +220,29 @@
   $("credit").href = "https://wa.me/2" + DEV.phone;
 
   // ---- Actions ----
-  // ينسخ الرقم ويفتح تطبيق Ana Vodafone
-  // لو التطبيق مش راضي يفتح مباشرة، بيفتح صفحته في Play Store / App Store وفيها زرار «فتح»
+  // يفتح الاتصال بكود تحويل فودافون كاش: *9*7*الرقم*المبلغ#  (# بتتكتب %23)
+  // لو المبلغ فاضي، الكود بيتكتب لحد الرقم والزبون يكمّل المبلغ و # بنفسه
+  // الآيفون بيمنع أكواد * و # من اللينكات، فبننسخ الرقم بداله
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   function transfer(number) {
-    copyNow(number);
-    toast("اتنسخ الرقم ✓ بنفتح التطبيق...");
     if (isIOS) {
-      location.href = APP.ios;
+      copy(number, null, "اتنسخ الرقم، حوّل من تطبيق Ana Vodafone");
+      return;
+    }
+    const amount = amountInput.value.trim();
+    if (amount && Number(amount) > 0) {
+      location.href = `tel:*9*7*${number}*${amount}%23`;
     } else {
-      const store = `https://play.google.com/store/apps/details?id=${APP.android}`;
-      location.href = `intent://#Intent;package=${APP.android};S.browser_fallback_url=${encodeURIComponent(store)};end`;
+      toast("اكتب المبلغ وبعده # ودوس اتصال");
+      location.href = `tel:*9*7*${number}*`;
     }
   }
 
-  // نسخ فوري (لازم يخلص قبل ما الصفحة تفتح التطبيق)
-  function copyNow(text) {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand("copy"); } catch (e) {}
-    ta.remove();
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(() => {});
-  }
-
-  function copy(text, btn) {
+  function copy(text, btn, msg = "تم نسخ الرقم") {
     const done = () => {
-      toast("تم نسخ الرقم");
+      toast(msg);
+      if (!btn) return;
       btn.classList.add("done");
       btn.innerHTML = ICONS.check;
       setTimeout(() => { btn.classList.remove("done"); btn.innerHTML = ICONS.copy; }, 2000);

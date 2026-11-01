@@ -3,93 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>طباعة الكيو ار</title>
+<title>طباعة الستيكر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
 <style>
-  body { margin: 0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #f5f5f7; color: #222; }
-  .tools { max-width: 520px; margin: 20px auto; padding: 16px; background: #fff; border-radius: 14px; }
-  .tools label { display: block; font-weight: bold; margin: 10px 0 6px; }
-  .tools input { width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-  .tools input[type=url] { direction: ltr; }
-  .tools .row { display: flex; gap: 8px; margin-top: 14px; }
-  .tools button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border: 0; border-radius: 10px; cursor: pointer; font-family: inherit; }
-  .gen { background: #e60000; color: #fff; }
-  .other { background: #eee; }
+  :root { --red: #e60000; --red-dark: #b00000; --ink: #17171c; --muted: #6b6b76; --line: #e6e6ec; --green: #1faa59; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Cairo", "Segoe UI", Tahoma, sans-serif; background: #ececf1; color: var(--ink); }
 
+  /* ---------- Tools (مش بتتطبع) ---------- */
+  .tools { max-width: 560px; margin: 20px auto; padding: 16px; background: #fff; border-radius: 16px; }
+  .tools label { display: block; font-weight: 700; margin-bottom: 6px; }
+  .tools input { width: 100%; padding: 10px 12px; font-size: 15px; border: 2px solid var(--line); border-radius: 10px; direction: ltr; }
+  .tools .row { display: flex; gap: 8px; margin-top: 12px; }
+  .tools button { flex: 1; padding: 12px; font: 700 15px "Cairo", sans-serif; border: 0; border-radius: 10px; cursor: pointer; }
+  .tools .gen { background: var(--red); color: #fff; }
+  .tools .print { background: #f0f0f4; }
+  .tools p { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+
+  /* ---------- Poster (A5) ---------- */
   .poster {
-    width: 14cm; margin: 20px auto; background: #fff; border: 6px solid #e60000; border-radius: 24px;
-    text-align: center; padding: 24px 16px 20px;
+    width: 148mm; min-height: 210mm; margin: 0 auto 30px; background: #fff;
+    border-radius: 6mm; overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 10px 40px -15px rgba(0,0,0,.3);
   }
-  .poster h1 { margin: 0; font-size: 34px; }
-  .poster .sub { color: #e60000; font-size: 26px; font-weight: bold; margin: 10px 0 18px; }
-  #qr { display: inline-block; padding: 12px; background: #fff; }
-  #qr img, #qr canvas { width: 9cm !important; height: 9cm !important; }
-  .poster .steps { font-size: 20px; margin-top: 14px; line-height: 1.7; }
-  .poster .credit { margin-top: 16px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 13px; color: #777; }
+  .top {
+    background: linear-gradient(150deg, #ff2a2a, var(--red) 45%, var(--red-dark));
+    color: #fff; text-align: center; padding: 7mm 6mm 6mm;
+  }
+  .top h1 { margin: 0; font-size: 26pt; font-weight: 800; line-height: 1.2; }
+  .top p { margin: 1mm 0 0; font-size: 14pt; font-weight: 700; opacity: .95; }
 
+  .main { text-align: center; padding: 5mm 6mm 3mm; }
+  .main-qr { display: inline-block; padding: 3mm; border: 1mm solid var(--ink); border-radius: 4mm; }
+  .main-qr img, .main-qr canvas { width: 62mm !important; height: 62mm !important; display: block; }
+  .main .cap { margin-top: 2.5mm; font-size: 13pt; font-weight: 800; }
+  .main .cap span { color: var(--red); }
+
+  .offline { margin: 2mm 6mm 0; border: 0.5mm dashed #c9c9d3; border-radius: 4mm; padding: 4mm 4mm 2mm; }
+  .offline-head { text-align: center; margin-bottom: 3mm; }
+  .offline-head b { display: inline-block; background: var(--ink); color: #fff; font-size: 12pt; padding: 1mm 5mm; border-radius: 99px; }
+  .offline-head p { margin: 1.5mm 0 0; font-size: 10.5pt; color: var(--muted); font-weight: 700; }
+  .offline-head p span { color: var(--red); }
+
+  .nums { display: grid; grid-template-columns: 1fr; gap: 2.5mm; }
+  .nums.two { grid-template-columns: 1fr 1fr; }
+  .num { display: flex; align-items: center; gap: 3mm; padding: 2mm; border-radius: 3mm; background: #f6f6f9; }
+  .num .q img, .num .q canvas { width: 22mm !important; height: 22mm !important; display: block; background: #fff; padding: 1mm; border-radius: 1.5mm; }
+  .num .name { font-size: 12pt; font-weight: 800; line-height: 1.2; }
+  .num .phone { font-size: 14pt; font-weight: 800; direction: ltr; text-align: right; letter-spacing: .3mm; color: var(--red-dark); }
+  .nums.two .phone { font-size: 11.5pt; }
+  .nums.two .q img, .nums.two .q canvas { width: 18mm !important; height: 18mm !important; }
+
+  .credit { margin-top: auto; padding: 3mm 6mm 4mm; text-align: center; font-size: 9pt; color: var(--muted); font-weight: 600; }
+  .credit b { color: var(--ink); }
+  .credit span { color: var(--green); font-weight: 800; direction: ltr; display: inline-block; }
+
+  @page { size: A5; margin: 0; }
   @media print {
     body { background: #fff; }
     .tools { display: none; }
-    .poster { margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .poster { margin: 0; border-radius: 0; box-shadow: none; height: 210mm; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 </head>
 <body>
 
 <div class="tools">
-  <label for="url">لينك صفحة الدفع (بعد ما ترفعها)</label>
-  <input id="url" type="url" placeholder="https://mahalak.netlify.app">
-  <label for="title">اسم المحل على الستيكر</label>
-  <input id="title" type="text" value="اسم المحل">
-  <label for="dev">اسمك (تصميم وتنفيذ)</label>
-  <input id="dev" type="text" value="م. طه حماده">
-  <label for="devContact">رقمك للتواصل (اختياري)</label>
-  <input id="devContact" type="text" placeholder="010xxxxxxxx" value="01061257703">
+  <label for="url">لينك صفحة الدفع</label>
+  <input id="url" type="url" placeholder="https://vodafonecashe.pages.dev">
   <div class="row">
-    <button class="gen" onclick="generate()">اعمل الكيو ار</button>
-    <button class="other" onclick="downloadPng()">تحميل صورة</button>
-    <button class="other" onclick="window.print()">طباعة</button>
+    <button class="gen" onclick="build()">حدّث الستيكر</button>
+    <button class="print" onclick="window.print()">طباعة / حفظ PDF</button>
   </div>
+  <p>اسم المحل والأرقام بتتاخد من ملف config.js. في الطباعة اختار مقاس A5، أو «Save as PDF» عشان تبعته للمطبعة.</p>
 </div>
 
 <div class="poster">
-  <h1 id="posterTitle">اسم المحل</h1>
-  <div class="sub">صوّر وادفع بفودافون كاش 📱</div>
-  <div id="qr"></div>
-  <div class="steps">١. افتح الكاميرا وصوّر الكود<br>٢. اختار الرقم وحوّل</div>
-  <div class="credit">تصميم وتنفيذ: <span id="posterDev">م. طه حماده</span> <span id="posterDevContact" dir="ltr">· واتساب 01061257703</span></div>
+  <div class="top">
+    <h1 id="shopName"></h1>
+    <p>صوّر وادفع بفودافون كاش</p>
+  </div>
+
+  <div class="main">
+    <div class="main-qr" id="mainQr"></div>
+    <div class="cap">📷 صوّر الكود بالكاميرا <span>واختار الرقم</span></div>
+  </div>
+
+  <div class="offline">
+    <div class="offline-head">
+      <b>📵 مفيش نت؟</b>
+      <p>صوّر المربع اللي جنب الرقم ← هيفتح الاتصال ← اكتب <span>المبلغ وبعده #</span> ودوس اتصال</p>
+    </div>
+    <div class="nums" id="nums"></div>
+  </div>
+
+  <div class="credit">تصميم وتنفيذ <b id="devName"></b> · واتساب <span id="devPhone"></span></div>
 </div>
 
 <script>
   const urlInput = document.getElementById("url");
-  // لو الصفحة دي مرفوعة مع index.html، اللينك بيتملى لوحده
+  // لو الصفحة مرفوعة، لينك صفحة الدفع بيتملى لوحده
   if (location.protocol.startsWith("http")) {
-    urlInput.value = location.href.replace(/qr\.html.*$/, "");
+    urlInput.value = location.origin + location.pathname.replace(/qr(\.html)?$/, "");
   }
 
-  let qr;
-  function generate() {
+  function qr(el, text, size) {
+    el.innerHTML = "";
+    new QRCode(el, { text, width: size, height: size, correctLevel: QRCode.CorrectLevel.M });
+  }
+
+  function build() {
+    document.getElementById("shopName").textContent = SHOP.name;
+    document.getElementById("devName").textContent = DEV.name;
+    document.getElementById("devPhone").textContent = DEV.phone;
+
     const url = urlInput.value.trim();
-    if (!url) { alert("اكتب اللينك الأول"); return; }
-    document.getElementById("posterTitle").textContent = document.getElementById("title").value;
-    document.getElementById("posterDev").textContent = document.getElementById("dev").value;
-    const contact = document.getElementById("devContact").value.trim();
-    document.getElementById("posterDevContact").textContent = contact ? "· واتساب " + contact : "";
-    const box = document.getElementById("qr");
-    box.innerHTML = "";
-    qr = new QRCode(box, { text: url, width: 600, height: 600, correctLevel: QRCode.CorrectLevel.H });
+    const main = document.getElementById("mainQr");
+    if (url) qr(main, url, 600);
+    else main.innerHTML = '<div style="width:62mm;height:62mm;display:grid;place-items:center;color:#999">اكتب اللينك فوق</div>';
+
+    const nums = document.getElementById("nums");
+    nums.innerHTML = "";
+    nums.classList.toggle("two", SHOP.numbers.length > 3);
+    SHOP.numbers.forEach(({ number, name }) => {
+      const row = document.createElement("div");
+      row.className = "num";
+      row.innerHTML = '<div class="q"></div><div><div class="name"></div><div class="phone"></div></div>';
+      row.querySelector(".name").textContent = name;
+      row.querySelector(".phone").textContent = number.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
+      nums.appendChild(row);
+      // كود تحويل فودافون كاش لحد الرقم (*9*7*الرقم*)، والزبون يكمّل المبلغ و #. بيشتغل من غير نت
+      qr(row.querySelector(".q"), `tel:*9*7*${number}*`, 300);
+    });
   }
 
-  function downloadPng() {
-    const canvas = document.querySelector("#qr canvas");
-    if (!canvas) { alert("اعمل الكيو ار الأول"); return; }
-    const a = document.createElement("a");
-    a.download = "vodafone-cash-qr.png";
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-  }
-
-  if (urlInput.value) generate();
+  build();
 </script>
 </body>
 </html>
