@@ -53,12 +53,12 @@
   .nums.two { grid-template-columns: repeat(2, 1fr); }
   .num {
     display: flex; flex-direction: column; align-items: center; text-align: center;
-    padding: 2.5mm 2mm 2mm; border-radius: 4mm; border: 0.4mm solid var(--line);
+    padding: 2.5mm 1mm 2mm; border-radius: 4mm; border: 0.4mm solid var(--line);
   }
   .num .q { padding: 2mm; background: #fff; }
   .num .q img, .num .q canvas { width: 33mm !important; height: 33mm !important; display: block; }
   .num .name { margin-top: .5mm; font-size: 14pt; font-weight: 800; line-height: 1.25; }
-  .num .phone { font-size: 18pt; font-weight: 800; line-height: 1.25; direction: ltr; letter-spacing: .2mm; color: var(--red-dark); }
+  .num .phone { font-size: 20pt; font-weight: 800; line-height: 1.25; direction: ltr; white-space: pre; word-spacing: .6mm; color: var(--red-dark); }
 
   .insta {
     display: flex; align-items: center; justify-content: center; gap: 4mm;
@@ -136,6 +136,9 @@
     new QRCode(el, { text, width: size, height: size, correctLevel: QRCode.CorrectLevel[level] });
   }
 
+  // 010 لوحدها وبعدها كل رقمين مع بعض: 010  64 24 76 96
+  const fmt = (n) => n.replace(/(\d{3})(\d{2})(\d{2})(\d{2})(\d{2})/, "$1  $2 $3 $4 $5");
+
   function build() {
     document.getElementById("shopName").textContent = SHOP.name;
     document.getElementById("devName").textContent = DEV.name;
@@ -150,7 +153,7 @@
     insta.style.display = SHOP.instapay ? "" : "none";
     if (SHOP.instapay) {
       document.getElementById("instaName").textContent = SHOP.instapay.name;
-      document.getElementById("instaPhone").textContent = SHOP.instapay.number.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
+      document.getElementById("instaPhone").textContent = fmt(SHOP.instapay.number);
     }
 
     const nums = document.getElementById("nums");
@@ -161,7 +164,7 @@
       row.className = "num";
       row.innerHTML = '<div class="q"></div><div class="name"></div><div class="phone"></div>';
       row.querySelector(".name").textContent = name;
-      row.querySelector(".phone").textContent = number.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
+      row.querySelector(".phone").textContent = fmt(number);
       nums.appendChild(row);
       // كود تحويل فودافون كاش لحد الرقم (*9*7*الرقم*)، والزبون يكمّل المبلغ و #. بيشتغل من غير نت
       qr(row.querySelector(".q"), `tel:*9*7*${number}*`, 300, "L");
