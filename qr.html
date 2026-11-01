@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>طباعة الكيو ار</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  body { margin: 0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #f5f5f7; color: #222; }
+  .tools { max-width: 520px; margin: 20px auto; padding: 16px; background: #fff; border-radius: 14px; }
+  .tools label { display: block; font-weight: bold; margin: 10px 0 6px; }
+  .tools input { width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+  .tools input[type=url] { direction: ltr; }
+  .tools .row { display: flex; gap: 8px; margin-top: 14px; }
+  .tools button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border: 0; border-radius: 10px; cursor: pointer; font-family: inherit; }
+  .gen { background: #e60000; color: #fff; }
+  .other { background: #eee; }
+
+  .poster {
+    width: 14cm; margin: 20px auto; background: #fff; border: 6px solid #e60000; border-radius: 24px;
+    text-align: center; padding: 24px 16px 20px;
+  }
+  .poster h1 { margin: 0; font-size: 34px; }
+  .poster .sub { color: #e60000; font-size: 26px; font-weight: bold; margin: 10px 0 18px; }
+  #qr { display: inline-block; padding: 12px; background: #fff; }
+  #qr img, #qr canvas { width: 9cm !important; height: 9cm !important; }
+  .poster .steps { font-size: 20px; margin-top: 14px; line-height: 1.7; }
+  .poster .credit { margin-top: 16px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 13px; color: #777; }
+
+  @media print {
+    body { background: #fff; }
+    .tools { display: none; }
+    .poster { margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tools">
+  <label for="url">لينك صفحة الدفع (بعد ما ترفعها)</label>
+  <input id="url" type="url" placeholder="https://mahalak.netlify.app">
+  <label for="title">اسم المحل على الستيكر</label>
+  <input id="title" type="text" value="اسم المحل">
+  <label for="dev">اسمك (تصميم وتنفيذ)</label>
+  <input id="dev" type="text" value="م. طه حماده">
+  <label for="devContact">رقمك للتواصل (اختياري)</label>
+  <input id="devContact" type="text" placeholder="010xxxxxxxx" value="01061257703">
+  <div class="row">
+    <button class="gen" onclick="generate()">اعمل الكيو ار</button>
+    <button class="other" onclick="downloadPng()">تحميل صورة</button>
+    <button class="other" onclick="window.print()">طباعة</button>
+  </div>
+</div>
+
+<div class="poster">
+  <h1 id="posterTitle">اسم المحل</h1>
+  <div class="sub">صوّر وادفع بفودافون كاش 📱</div>
+  <div id="qr"></div>
+  <div class="steps">١. افتح الكاميرا وصوّر الكود<br>٢. اختار الرقم وحوّل</div>
+  <div class="credit">تصميم وتنفيذ: <span id="posterDev">م. طه حماده</span> <span id="posterDevContact" dir="ltr">· واتساب 01061257703</span></div>
+</div>
+
+<script>
+  const urlInput = document.getElementById("url");
+  // لو الصفحة دي مرفوعة مع index.html، اللينك بيتملى لوحده
+  if (location.protocol.startsWith("http")) {
+    urlInput.value = location.href.replace(/qr\.html.*$/, "");
+  }
+
+  let qr;
+  function generate() {
+    const url = urlInput.value.trim();
+    if (!url) { alert("اكتب اللينك الأول"); return; }
+    document.getElementById("posterTitle").textContent = document.getElementById("title").value;
+    document.getElementById("posterDev").textContent = document.getElementById("dev").value;
+    const contact = document.getElementById("devContact").value.trim();
+    document.getElementById("posterDevContact").textContent = contact ? "· واتساب " + contact : "";
+    const box = document.getElementById("qr");
+    box.innerHTML = "";
+    qr = new QRCode(box, { text: url, width: 600, height: 600, correctLevel: QRCode.CorrectLevel.H });
+  }
+
+  function downloadPng() {
+    const canvas = document.querySelector("#qr canvas");
+    if (!canvas) { alert("اعمل الكيو ار الأول"); return; }
+    const a = document.createElement("a");
+    a.download = "vodafone-cash-qr.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  }
+
+  if (urlInput.value) generate();
+</script>
+</body>
+</html>
