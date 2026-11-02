@@ -29,7 +29,7 @@
     box-shadow: 0 10px 40px -15px rgba(0,0,0,.3);
   }
   .top {
-    display: flex; align-items: center; gap: 8mm; padding: 4mm 12mm;
+    display: flex; align-items: center; gap: 8mm; padding: 3.5mm 12mm;
     background: linear-gradient(150deg, #ff2a2a, var(--red) 45%, var(--red-dark)); color: #fff;
   }
   .top-text { flex: 1; }
@@ -42,34 +42,34 @@
   .main-qr { background: #fff; padding: 3mm; border-radius: 4mm; flex-shrink: 0; }
   .main-qr img, .main-qr canvas { width: 36mm !important; height: 36mm !important; display: block; }
 
-  .offline { margin: 4mm 10mm 0; }
-  .offline-head { text-align: center; margin-bottom: 3mm; }
+  .offline { margin: 3.5mm 6mm 0; }
+  .offline-head { text-align: center; margin-bottom: 2.5mm; }
   .offline-head b { display: inline-block; background: var(--ink); color: #fff; font-size: 13pt; padding: 1mm 6mm; border-radius: 99px; }
   .offline-head p { margin: 1.5mm 0 0; font-size: 12.5pt; color: var(--muted); font-weight: 700; }
   .offline-head p span { color: var(--red); }
 
   /* كل كيو ار في كارت لوحده ومسافة كبيرة بينهم، عشان الكاميرا تلقط واحد بس */
-  .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm 7mm; }
+  .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm 7mm; }
   .nums.two { grid-template-columns: repeat(2, 1fr); }
   .num {
     display: flex; flex-direction: column; align-items: center; text-align: center;
-    padding: 2.5mm 1mm 2mm; border-radius: 4mm; border: 0.4mm solid var(--line);
+    padding: 2mm 1mm 1.5mm; border-radius: 4mm; border: 0.4mm solid var(--line);
   }
   .num .q { padding: 2mm; background: #fff; }
-  .num .q img, .num .q canvas { width: 33mm !important; height: 33mm !important; display: block; }
-  .num .name { margin-top: .5mm; font-size: 14pt; font-weight: 800; line-height: 1.25; }
-  .num .phone { font-size: 20pt; font-weight: 800; line-height: 1.25; direction: ltr; white-space: pre; word-spacing: .6mm; color: var(--red-dark); }
+  .num .q img, .num .q canvas { width: 35mm !important; height: 35mm !important; display: block; }
+  .num .name { margin-top: 0; font-size: 15pt; font-weight: 800; line-height: 1.25; }
+  .num .phone { font-size: 21pt; font-weight: 800; line-height: 1.25; direction: ltr; white-space: pre; word-spacing: .4mm; color: var(--red-dark); }
 
   .insta {
     display: flex; align-items: center; justify-content: center; gap: 4mm;
-    margin: 4mm 10mm 0; padding: 2.5mm; border-radius: 4mm; background: #f3eefb;
+    margin: 3.5mm 6mm 0; padding: 2.5mm; border-radius: 4mm; background: #f3eefb;
   }
   .insta .badge {
     padding: 1.5mm 4mm; border-radius: 2.5mm; color: #fff; font-weight: 800; font-size: 13pt; direction: ltr;
     background: linear-gradient(135deg, #6d3fc0, #4b2a85);
   }
   .insta .name { font-size: 15pt; font-weight: 800; }
-  .insta .phone { font-size: 17pt; font-weight: 800; direction: ltr; color: #4b2a85; letter-spacing: .3mm; }
+  .insta .phone { font-size: 18pt; font-weight: 800; direction: ltr; unicode-bidi: isolate; white-space: pre; color: #4b2a85; letter-spacing: .3mm; }
 
   .credit { margin-top: auto; padding: 3mm 6mm 4mm; text-align: center; font-size: 11pt; color: var(--muted); font-weight: 600; }
   .credit b { color: var(--ink); }
